@@ -1,9 +1,35 @@
-
-
+import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import appwriteService from '../appwrite/config'
+import Container from "../component/container/container"
+import PostForm from '../component/post-form/PostForm'
 
 function EditPost(){
+    
+    const [post, setPost] = useState(null)
+    const {slug} = useParams()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if(slug){
+            appwriteService.getPost(slug).then((post) => {
+                if(post){
+                    setPost(post)
+                }else{
+                    navigate("/")
+                }
+            })
+        }
+    },[slug, navigate])
+
+
     return(
-        <div>Edit Post</div>
+        <div className="py-6">
+            <Container>
+                <PostForm post={post}/>
+            </Container>
+
+        </div>
     )
 }
 
